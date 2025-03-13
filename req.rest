@@ -1,0 +1,41 @@
+//Criação de usuário
+POST http://localhost:5000/auth/register/
+Content-Type: application/json
+
+{
+    "username": "usuario123",
+    "password": "senhaSegura123"
+}
+
+###
+//Login
+POST http://localhost:5000/auth/login/
+Content-Type: application/json
+
+{
+    "username": "usuario123",
+    "password": "senhaSegura123"
+}
+
+###
+//Requisição para rota protegida
+GET http://localhost:5000/api/protected
+Authorization: Bearer <ACCESS_TOKEN>
+
+###
+//Refresh token
+POST http://localhost:5000/auth/token
+Content-Type: application/application/json
+
+{
+    "token": "<REFRESH_TOKEN>"
+}
+
+###
+//Logout
+POST http://localhost:5000/auth/logout
+Content-Type: application/json
+
+{
+    "token": "<REFRESH_TOKEN>"
+}
