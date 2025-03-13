@@ -1,13 +1,12 @@
 import React from "react";
 import { Button } from "@mui/material";
-import { Link,useNavigate } from "react-router-dom";
-import { Slider } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar({ onLogout }) {
   return (
-    <nav>
-      <Link to="/home">Home</Link>
-      <Button variant="contained" color="secondary" onClick={onLogout}>
+    <nav style={styles.navbar}>
+      <Link to="/home" style={styles.navLink}>Home</Link>
+      <Button variant="contained" color="secondary" onClick={onLogout} style={styles.logoutButton}>
         Logout
       </Button>
     </nav>
@@ -23,18 +22,18 @@ function Home() {
   };
 
   const sliderData = [
-    { title: "Filmes Populares", banners: ["Banner1", "Banner2", "Banner3"] },
+    { title: "Filmes Populares", banners: Array(10).fill("Banner") },
     {
       title: "Usuários parecidos também gostaram de",
-      banners: ["Banner4", "Banner5", "Banner6"],
+      banners: Array(10).fill("Banner"),
     },
     {
       title: "Usuários parecidos assistiram",
-      banners: ["Banner7", "Banner8", "Banner9"],
+      banners: Array(10).fill("Banner"),
     },
     {
       title: "Filmes parecidos com",
-      banners: ["Banner10", "Banner11", "Banner12"],
+      banners: Array(10).fill("Banner"),
     },
   ];
 
@@ -45,15 +44,9 @@ function Home() {
       {sliderData.map((slider, index) => (
         <div key={index}>
           <h3>{slider.title}</h3>
-          <Slider
-            aria-labelledby="slider"
-            value={0}
-            valueLabelDisplay="auto"
-            max={slider.banners.length - 1}
-          />
-          <div className="banners">
+          <div className="banners" style={styles.banners}>
             {slider.banners.map((banner, idx) => (
-              <div key={idx} className="banner">
+              <div key={idx} className="banner" style={styles.banner}>
                 <button>{banner}</button>
               </div>
             ))}
@@ -63,5 +56,42 @@ function Home() {
     </div>
   );
 }
+
+const styles = {
+  navbar: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    backgroundColor: "#fff",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    zIndex: 10,
+  },
+  navLink: {
+    textDecoration: "none",
+    color: "#333",
+  },
+  logoutButton: {
+    marginLeft: "auto",
+  },
+  banners: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "10px",
+    marginTop: "10px",
+  },
+  banner: {
+    backgroundColor: "#f0f0f0",
+    padding: "10px",
+    textAlign: "center",
+    borderRadius: "5px",
+    width: "90px",
+    height: "60px",
+  },
+};
 
 export default Home;

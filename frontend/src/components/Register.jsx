@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../index.css";
+import { Card, CardContent, Typography, TextField, Button } from "@mui/material";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -10,7 +12,6 @@ function Register() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      // Se o usuário estiver logado, previne a navegação
       navigate("/user/home");
     }
   }, [navigate]);
@@ -26,21 +27,41 @@ function Register() {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <input
-        type="text"
-        placeholder="Usuário"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleRegister}>Registrar</button>
+    <div className="auth-container">
+      <Card className="auth-card">
+        <CardContent>
+          <Typography variant="h5" align="center">Registro</Typography>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Usuário"
+            variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Senha"
+            variant="outlined"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>
+            Registrar
+          </Button>
+          <Button
+            fullWidth
+            variant="text"
+            color="secondary"
+            onClick={() => navigate("/login")}
+            style={{ marginTop: "10px" }}
+          >
+            POSSUI UMA CONTA? FAÇA O LOGIN AQUI
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
