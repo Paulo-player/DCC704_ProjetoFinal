@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/register/
 Content-Type: application/json
 
 {
-    "username": "usuario1234",
-    "password": "senhaSegura123"
+    "username": "usuario12345",
+    "password": "senha123"
 }
 
 ###
@@ -13,23 +13,25 @@ POST http://localhost:5000/auth/login/
 Content-Type: application/json
 
 {
-    "username": "usuario1234",
-    "password": "senhaSegura123"
+    "username": "usuario12345",
+    "password": "senha123"
 }
 
 ###
 //Requisição para rota protegida
 GET http://localhost:5000/user/home
-Authorization: Bearer <ACCESS_TOKEN>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZWQzZTAyYjBlMjA0YzA3YmExZCIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1IiwiaWF0IjoxNzQxODc2OTUxLCJleHAiOjE3NDE4Nzc4NTF9.FAAQu-4M6kVHaxuYf01yJ4IAvxrMYOY30PaUbbOJ3YQ
 
 ###
 //Refresh token
 POST http://localhost:5000/auth/token
-Content-Type: application/application/json
+Content-Type: application/json
 
 {
-    "token": "<REFRESH_TOKEN>"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZWQzZTAyYjBlMjA0YzA3YmExZCIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1IiwiaWF0IjoxNzQxODc2OTUxfQ.qfQvIbzVkTAWsscjgPr7CZ6qMbnVcuuXnuPgnXOOVDk"
 }
+
+
 
 ###
 //Logout
@@ -37,6 +39,6 @@ POST http://localhost:5000/auth/logout
 Content-Type: application/json
 
 {
-    "token": "<REFRESH_TOKEN>"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZWQzZTAyYjBlMjA0YzA3YmExZCIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1IiwiaWF0IjoxNzQxODc2OTg3LCJleHAiOjE3NDE4Nzc4ODd9.GkIqm_Tw8Oe9gORPNJ8gI0xkD8FVeIRCw07B5ubx_rQ"
 }
 
