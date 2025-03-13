@@ -42,3 +42,7 @@ Content-Type: application/json
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZjliZmE4YjBmMTFiMjUzYzhjMyIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1NiIsImlhdCI6MTc0MTg3NzE0OX0.yIFDS73tkQUCVnNpzQUszmVaxOk_ZV7iUcwTxsQv0Vk"
 }
 
+
+###
+
+GET http://localhost:5000/api/movies/popular

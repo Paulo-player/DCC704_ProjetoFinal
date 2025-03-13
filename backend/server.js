@@ -2,19 +2,24 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./database/database");
+
+//Importação das rotas em routes
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require('./routes/userRoutes'); // Antes era protectedRoutes
+const userRoutes = require('./routes/userRoutes');
+const movieRoutes = require("./routes/movieRoutes");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
+//MIDDLEWARES
 app.use(cors());
 app.use(express.json());
 
 connectDB();
 
-// Modificado para usar '/auth' ao invés de '/api/auth'
-app.use("/auth", authRoutes);   // Agora as rotas de autenticação serão acessadas com /auth
-app.use("/user", userRoutes);   // As rotas de usuário agora são acessadas com /user
+//ROTAS
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.use("/api/movies", movieRoutes);
 
 app.listen(PORT, () => console.log(`Server on-line na porta ${PORT}`));
