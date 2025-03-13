@@ -15,6 +15,6 @@ connectDB();
 
 // Modificado para usar '/auth' ao invés de '/api/auth'
 app.use("/auth", authRoutes);   // Agora as rotas de autenticação serão acessadas com /auth
-app.use('/user', userRoutes);   // As rotas de usuário agora são acessadas com /user
+app.use("/user", userRoutes);   // As rotas de usuário agora são acessadas com /user
 
 app.listen(PORT, () => console.log(`Server on-line na porta ${PORT}`));
