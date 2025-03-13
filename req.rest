@@ -3,7 +3,7 @@ POST http://localhost:5000/auth/register/
 Content-Type: application/json
 
 {
-    "username": "usuario123",
+    "username": "usuario1234",
     "password": "senhaSegura123"
 }
 
@@ -13,13 +13,13 @@ POST http://localhost:5000/auth/login/
 Content-Type: application/json
 
 {
-    "username": "usuario123",
+    "username": "usuario1234",
     "password": "senhaSegura123"
 }
 
 ###
 //Requisição para rota protegida
-GET http://localhost:5000/api/protected
+GET http://localhost:5000/user/home
 Authorization: Bearer <ACCESS_TOKEN>
 
 ###
@@ -39,3 +39,4 @@ Content-Type: application/json
 {
     "token": "<REFRESH_TOKEN>"
 }
+
