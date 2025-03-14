@@ -63,5 +63,5 @@ Authorization: Bearer {{token}}
 
 {
   "movieId": 950396,
-  "rating": 4
+  "rating": 3
 }

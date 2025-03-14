@@ -9,8 +9,42 @@ Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcia
 
 ## Instalação
 
-1. Clone o repositório:
+1.Clone o repositório
    ```bash
-   git clone https://github.com/Paulo-player/DCC704_Paulo-Belmont.git
+   git clone https://github.com/Paulo-player/DCC704_ProjetoFinal.git
+   ```
+2. Navegue até a pasta do projeto
+   ```bash
+      cd DCC704_ProjetoFinal
+   ```
+3. Renomeie o arquivo .env.example na pasta raiz e preencha as variáveis de ambiente conforme os comentários
+   ```bash
+      rename .env.example .env
+      notepad .env
+   ```
+4. Feche o notepad e inicie um segundo terminal
+   ```bash
+      start cmd
+   ```
+5. No primeiro terminal, navegue até a pasta do backend e instale as dependências
+   ```bash
+      cd backend
+      npm install
+   ```
+6.No primeiro terminal, navegue até a pasta do frontend e instale as dependências
+   ```bash
+      cd frontend
+      npm install
+   ```
+7. Ao acabar a instalação no primeiro terminal, execute o backend
+```bash
+      npm start
+   ```
+8. Ao acabar a instalação no segundo terminal, execute o frontend
+```bash
+      npm run dev
+   ```
 
-2. 
+## Uso
+
+## documentação-da-API
