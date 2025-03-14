@@ -1,10 +1,14 @@
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTI3ODIsImV4cCI6MTc0MTkxMzY4Mn0._0i1NTcoVal45yTKhqneR-h6Yne3lSh_oOLxyrdTFog
+@refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTI3NDN9.PfWrocLibuX402Ruw4wtT2moGpVjw0TJ_t5tR6nfn98
+@user=userRest
+@pass=rest123
 //CADASTRO
 POST http://localhost:5000/auth/register/
 Content-Type: application/json
 
 {
-    "username": "userRest",
-    "password": "rest123"
+    "username": "{{user}}",
+    "password": "{{pass}}"
 }
 
 ###
@@ -13,14 +17,14 @@ POST http://localhost:5000/auth/login/
 Content-Type: application/json
 
 {
-    "username": "userRest",
-    "password": "rest123"
+    "username": "{{user}}",
+    "password": "{{pass}}"
 }
 
 ###
 //ROTA PROTEGIDA HOME
 GET http://localhost:5000/user/home
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTExODAsImV4cCI6MTc0MTkxMjA4MH0.2iBJjQBJyIqmK0s9LZ4sz5PurGDB9U_dMcL_ayc_hNc
+Authorization: Bearer {{token}}
 
 ###
 //NOVO TOKEN
@@ -28,10 +32,8 @@ POST http://localhost:5000/auth/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTAxMTh9.dBs0VZwo50kSxVttwaBoiv-MTdK8HdD0AoiGddsPLGA"
+    "token": "{{refresh}}"
 }
-
-
 
 ###
 //LOGOUT
@@ -39,9 +41,8 @@ POST http://localhost:5000/auth/logout
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTAxMTh9.dBs0VZwo50kSxVttwaBoiv-MTdK8HdD0AoiGddsPLGA"
+    "token": "{{refresh}}"
 }
-
 
 ###
 //FILMES DO DB
@@ -50,5 +51,17 @@ GET http://localhost:5000/api/movies/popular
 ###
 //RECOMENDAÇÕES
 GET http://localhost:5000/api/recommendations/movies
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTExODAsImV4cCI6MTc0MTkxMjA4MH0.2iBJjQBJyIqmK0s9LZ4sz5PurGDB9U_dMcL_ayc_hNc
+Authorization: Bearer {{token}}
 Content-Type: application/json
+
+###
+
+//AVALIAR FILME
+POST http://localhost:5000/api/reviews/rate
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "movieId": 950396,
+  "rating": 4
+}
