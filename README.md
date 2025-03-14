@@ -12,3 +12,5 @@ Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcia
 1. Clone o repositório:
    ```bash
    git clone https://github.com/Paulo-player/DCC704_Paulo-Belmont.git
+
+2. 

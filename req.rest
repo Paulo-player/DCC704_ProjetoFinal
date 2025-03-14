@@ -1,48 +1,54 @@
-//Criação de usuário
+//CADASTRO
 POST http://localhost:5000/auth/register/
 Content-Type: application/json
 
 {
-    "username": "usuario123456",
-    "password": "senha123"
+    "username": "userRest",
+    "password": "rest123"
 }
 
 ###
-//Login
+//LOGIN
 POST http://localhost:5000/auth/login/
 Content-Type: application/json
 
 {
-    "username": "usuario123456",
-    "password": "senha123"
+    "username": "userRest",
+    "password": "rest123"
 }
 
 ###
-//Requisição para rota protegida
+//ROTA PROTEGIDA HOME
 GET http://localhost:5000/user/home
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZjliZmE4YjBmMTFiMjUzYzhjMyIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1NiIsImlhdCI6MTc0MTg3NzE0OSwiZXhwIjoxNzQxODc4MDQ5fQ.nf-_mVc1cTl1rXqu_NprlbOrE4Wqsw-i_FLfodfQ448
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTExODAsImV4cCI6MTc0MTkxMjA4MH0.2iBJjQBJyIqmK0s9LZ4sz5PurGDB9U_dMcL_ayc_hNc
 
 ###
-//Refresh token
+//NOVO TOKEN
 POST http://localhost:5000/auth/token
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZjliZmE4YjBmMTFiMjUzYzhjMyIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1NiIsImlhdCI6MTc0MTg3NzE0OX0.yIFDS73tkQUCVnNpzQUszmVaxOk_ZV7iUcwTxsQv0Vk"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTAxMTh9.dBs0VZwo50kSxVttwaBoiv-MTdK8HdD0AoiGddsPLGA"
 }
 
 
 
 ###
-//Logout
+//LOGOUT
 POST http://localhost:5000/auth/logout
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDJlZjliZmE4YjBmMTFiMjUzYzhjMyIsInVzZXJuYW1lIjoidXN1YXJpbzEyMzQ1NiIsImlhdCI6MTc0MTg3NzE0OX0.yIFDS73tkQUCVnNpzQUszmVaxOk_ZV7iUcwTxsQv0Vk"
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTAxMTh9.dBs0VZwo50kSxVttwaBoiv-MTdK8HdD0AoiGddsPLGA"
 }
 
 
 ###
-
+//FILMES DO DB
 GET http://localhost:5000/api/movies/popular
+
+###
+//RECOMENDAÇÕES
+GET http://localhost:5000/api/recommendations/movies
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTExODAsImV4cCI6MTc0MTkxMjA4MH0.2iBJjQBJyIqmK0s9LZ4sz5PurGDB9U_dMcL_ayc_hNc
+Content-Type: application/json
