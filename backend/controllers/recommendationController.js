@@ -1,4 +1,11 @@
-// controllers/recommendationController.js
+/**
+ * @file recommendationController.js
+ * @description Este arquivo contém as funções relacionadas ao sistema de recomendação do site
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
+
 const User = require("../models/User");
 const Rating = require("../models/Rating");
 const Movie = require("../models/Movies");

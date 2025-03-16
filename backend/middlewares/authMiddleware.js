@@ -1,3 +1,11 @@
+/**
+ * @file authMiddleware.js
+ * @description Esse arquivo contém o middleware verifyToken, utilizado ao acessar qualquer rota protegida que requira token
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
+
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {

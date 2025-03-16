@@ -1,4 +1,12 @@
-// routes/recommendationRoutes.js
+/**
+ * @file recommendationRoutes.js
+ * @description Arquivo roteador com as rotas de recomendação
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
+
+
 const express = require("express");
 const { getRecommendedMovies } = require("../controllers/recommendationController");
 const router = express.Router();

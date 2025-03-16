@@ -1,8 +1,10 @@
-//*
-// ESSA UTILIDADE EXTRAI OS 10.000 FILMES MAIS POPULARES NA TMDB,
-// APLICA A TRADUÇÃO DO CÓDIGO DE GÊNERO PARA SEU RESPECTIVO NOME E FINALMENTE
-// ARMAZENA OS FILMES NA DATABASE
-//  */
+/**
+ * @file seedMovies.js
+ * @description Este arquivo popula o banco de dados com os 10.000 filmes mais populares no TMDB
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
 
 require('dotenv').config({ path: "../.env" });
 const axios = require('axios');

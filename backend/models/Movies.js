@@ -1,4 +1,10 @@
-// models/Movies.js
+/**
+ * @file Movies.js
+ * @description Esquema de filme
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
 
 const mongoose = require("mongoose");
 

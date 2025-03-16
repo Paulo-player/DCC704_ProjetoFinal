@@ -1,3 +1,11 @@
+/**
+ * @file authRoutes.js
+ * @description Arquivo roteador com as rotas de autenticação e autorização
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
+
 const express = require("express");
 const { register, login, refreshToken, logout } = require("../controllers/authController");
 

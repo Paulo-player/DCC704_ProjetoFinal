@@ -1,7 +1,7 @@
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTI3ODIsImV4cCI6MTc0MTkxMzY4Mn0._0i1NTcoVal45yTKhqneR-h6Yne3lSh_oOLxyrdTFog
-@refresh=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDM3MDYzYzY2YWJkNGI2ZTQxNThjNCIsInVzZXJuYW1lIjoidXNlclJlc3QiLCJpYXQiOjE3NDE5MTI3NDN9.PfWrocLibuX402Ruw4wtT2moGpVjw0TJ_t5tR6nfn98
-@user=userRest
-@pass=rest123
+@token=
+@refresh=
+@user=testUser
+@pass=test123
 //CADASTRO
 POST http://localhost:5000/auth/register/
 Content-Type: application/json

@@ -1,3 +1,11 @@
+/**
+ * @file reviewRoutes.js
+ * @description Arquivo roteador com as rotas avaliação
+ * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * @version 1.0.0
+ * @license MIT
+ */
+
 const express = require("express");
 const Rating = require("../models/Rating");
 const Movie = require("../models/Movies"); // Importação do modelo Movies
