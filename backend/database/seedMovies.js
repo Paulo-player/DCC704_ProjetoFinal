@@ -9,27 +9,11 @@
 require('dotenv').config({ path: "../.env" });
 const axios = require('axios');
 const mongoose = require('mongoose');
+const Movie = require("../models/Movie");
+const connectDB = require("./database");
 
 // Conexão com o mongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// Schema de filmes
-const movieSchema = new mongoose.Schema({
-    id: { type: Number, unique: true },
-    title: String,
-    overview: String,
-    release_date: String,
-    popularity: Number,
-    vote_average: Number,
-    vote_count: Number,
-    poster_path: String,
-    backdrop_path: String,
-    genre_ids: [String]
-});
-
-const Movie = mongoose.model('Movie', movieSchema);
+connectDB()
 
 // API da TMDB
 const API_KEY = process.env.TMDB_API_KEY;

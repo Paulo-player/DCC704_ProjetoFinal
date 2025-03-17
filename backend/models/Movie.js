@@ -1,5 +1,5 @@
 /**
- * @file Movies.js
+ * @file Movie.js
  * @description Esquema de filme
  * @author Paulo Belmont <paulopereira737@hotmail.com>
  * @version 1.0.0

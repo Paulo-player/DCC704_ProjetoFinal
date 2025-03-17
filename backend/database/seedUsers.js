@@ -7,19 +7,13 @@
  */
 
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const User = require("../models/User"); // Ajuste o caminho conforme necessário
-require("dotenv").config({ path: "../.env" });
-
-const MONGO_URI = process.env.MONGO_URI;
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+const connectDB = require("./database");
 
 async function populateUsers() {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
+    await connectDB(); // Usa a função de conexão existente
     console.log("Conectado ao MongoDB");
 
     const users = [];

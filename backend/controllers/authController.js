@@ -15,9 +15,7 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 let refreshTokens = [];
 
-/**
- * Cadastra o usuário, armazenando suas credenciais no banco de dados
- */
+//Registro de usuário
 exports.register = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -40,6 +38,7 @@ exports.register = async (req, res) => {
     }
 };
 
+//Login
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -67,6 +66,7 @@ exports.login = async (req, res) => {
     }
 };
 
+//Atualização de token JWT
 exports.refreshToken = (req, res) => {
     const { token } = req.body;
     if (!token || !refreshTokens.includes(token)) return res.status(403).json({ message: 'Token inválido ou não encontrado.' });
@@ -84,7 +84,7 @@ exports.refreshToken = (req, res) => {
     });
 };
 
-
+//Logout
 exports.logout = (req, res) => {
     try {
         const { token } = req.body;
