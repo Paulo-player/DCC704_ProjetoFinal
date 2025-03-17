@@ -1,12 +1,12 @@
 /**
  * @file movieController.js
  * @description Este arquivo contém as funções relacionadas à obtenção de filmes
- * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * 
  * @version 1.0.0
  * @license MIT
  */
 
-const Movie = require("../models/Movies"); // Modelo de filmes
+const Movie = require("../models/Movie"); // Modelo de filmes
 const axios = require("axios"); // Para fazer requisições à API TMDB
 
 // Função para buscar filmes populares

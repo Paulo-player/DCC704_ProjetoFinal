@@ -1,7 +1,7 @@
 /**
  * @file authController.js
  * @description Este arquivo contém as funções relacionadas à autenticação dos usuários no sistema
- * @author Paulo Belmont <paulopereira737@hotmail.com>
+ * 
  * @version 1.0.0
  * @license MIT
  */

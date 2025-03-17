@@ -1,11 +1,4 @@
-/**
- * @file userRoutes.js
- * @description Arquivo roteador com as rotas protegidas
- * @author Paulo Belmont <seuemail@example.com>
- * @version 1.0.0
- * @license MIT
- */
-
+//Rotas protegidas
 const express = require('express');
 const verifyToken = require('../middlewares/authMiddleware');  // Usando o middleware importado
 

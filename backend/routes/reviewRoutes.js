@@ -1,10 +1,4 @@
-/**
- * @file reviewRoutes.js
- * @description Arquivo roteador com as rotas de avaliação
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Rotas de avaliação
 
 const express = require("express");
 const Rating = require("../models/Rating");

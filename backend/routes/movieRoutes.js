@@ -1,10 +1,4 @@
-/**
- * @file movieRoutes.js
- * @description Arquivo roteador com as rotas de filmes
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Rotas de filmes
 
 const express = require("express");
 const movieController = require("../controllers/movieController");

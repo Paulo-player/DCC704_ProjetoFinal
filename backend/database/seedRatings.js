@@ -1,3 +1,5 @@
+//Utilitário para adicionar avaliações no database
+
 const mongoose = require("mongoose");
 const User = require("../models/User");
 const Movie = require("../models/Movie");

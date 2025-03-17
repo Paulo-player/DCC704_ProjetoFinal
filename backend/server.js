@@ -1,10 +1,4 @@
-/**
- * @file server.js
- * @description Arquivo principal do backend. Ponto de entrada para o funcionamento da aplicação
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Arquivo principal do backend
 
 require("dotenv").config();
 const express = require("express");

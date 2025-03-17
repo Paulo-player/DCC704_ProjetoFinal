@@ -1,10 +1,4 @@
-/**
- * @file recommendationController.js
- * @description Este arquivo contém as funções relacionadas ao sistema de recomendação do site
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Este arquivo contém as funções relacionadas ao sistema de recomendação do site
 
 const fs = require("fs");
 const path = require("path");

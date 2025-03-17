@@ -1,38 +1,43 @@
-@token=
-@refresh=
-@user=testUser
-@pass=test123
+//Arquivo para teste de requisições
+
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDc3NDhlMmQxNDBjNTdiYzJmOTY3YiIsInVzZXJuYW1lIjoiRHVtbXkxIiwiaWF0IjoxNzQyMTczNDgxLCJleHAiOjE3NDIxNzQzODF9.IV4e_zJjTryGjRrrh7WuLiRyCvDfwU8oNAwE_heZTiA
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDc3NDhlMmQxNDBjNTdiYzJmOTY3YiIsInVzZXJuYW1lIjoiRHVtbXkxIiwiaWF0IjoxNzQyMTczNDgxfQ.cwuuxlvDhvS-pe-SFYqpQpPcALk0wMlsK5AoOoGDwiE
+@username=Dummy1
+@password=Dummy1
+
+
+//ROTAS DE AUTORIZAÇÃO E AUTENTICAÇÃO
 //CADASTRO
 POST http://localhost:5000/auth/register/
 Content-Type: application/json
 
 {
-    "username": "{{user}}",
-    "password": "{{pass}}"
+    "username": "{{username}}",
+    "password": "{{password}}"
 }
 
 ###
 //LOGIN
-POST http://localhost:5000/auth/login/
+ POST http://localhost:5000/auth/login/
 Content-Type: application/json
 
 {
-    "username": "{{user}}",
-    "password": "{{pass}}"
+    "username": "{{username}}",
+    "password": "{{password}}"
 }
 
 ###
-//ROTA PROTEGIDA HOME
+//HOME
 GET http://localhost:5000/user/home
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 ###
-//NOVO TOKEN
-POST http://localhost:5000/auth/token
+//NOVO accessToken
+POST http://localhost:5000/auth/accessToken
 Content-Type: application/json
 
 {
-    "token": "{{refresh}}"
+    "accessToken": "{{refreshToken}}"
 }
 
 ###
@@ -41,9 +46,10 @@ POST http://localhost:5000/auth/logout
 Content-Type: application/json
 
 {
-    "token": "{{refresh}}"
+    "accessToken": "{{refreshToken}}"
 }
 
+//ROTAS DA API
 ###
 //FILMES DO DB
 GET http://localhost:5000/api/movies/popular
@@ -51,7 +57,7 @@ GET http://localhost:5000/api/movies/popular
 ###
 //RECOMENDAÇÕES
 GET http://localhost:5000/api/recommendations/movies
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ###
@@ -59,9 +65,9 @@ Content-Type: application/json
 //AVALIAR FILME
 POST http://localhost:5000/api/reviews/rate
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accessToken}}
 
 {
-  "movieId": 950396,
-  "rating": 3
+  "movieId": 1286773,
+  "rating": 4
 }

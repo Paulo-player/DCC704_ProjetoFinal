@@ -1,10 +1,4 @@
-/**
- * @file recommendationRoutes.js
- * @description Arquivo roteador com as rotas de recomendação
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Rotas de recomendação
 
 
 const express = require("express");

@@ -1,10 +1,4 @@
-/**
- * @file seedUsers.js
- * @description Este arquivo popula o banco de dados com 100 usuários
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Utilitário para adicionar 100 usuários ao database
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");

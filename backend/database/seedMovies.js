@@ -1,10 +1,4 @@
-/**
- * @file seedMovies.js
- * @description Este arquivo popula o banco de dados com os 10.000 filmes mais populares no TMDB
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Utilitário para extrair filmes do TMDB para o Database
 
 require('dotenv').config({ path: "../.env" });
 const axios = require('axios');

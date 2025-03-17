@@ -1,10 +1,4 @@
-/**
- * @file Rating.js
- * @description Esquema de ratings
- * @author Paulo Belmont <paulopereira737@hotmail.com>
- * @version 1.0.0
- * @license MIT
- */
+//Ratings
 
 const mongoose = require("mongoose");
 
