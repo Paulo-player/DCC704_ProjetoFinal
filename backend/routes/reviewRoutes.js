@@ -1,8 +1,7 @@
 //Rotas de avaliação
 
 const express = require("express");
-const Rating = require("../models/Rating");
-const Movie = require("../models/Movie");
+const {Rating,Movie} = require("../models/Schemas");
 
 const authMiddleware = require("../middlewares/authMiddleware");
 

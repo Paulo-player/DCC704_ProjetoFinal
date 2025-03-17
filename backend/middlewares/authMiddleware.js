@@ -1,4 +1,4 @@
-//Esse arquivo contém o middleware verifyToken, utilizado ao acessar qualquer rota protegida que requira token
+//Middleware verifyToken, que controla o acesso a rotas protegidas
 
 const jwt = require('jsonwebtoken');
 

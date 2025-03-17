@@ -1,21 +1,16 @@
-/**
- * @file authController.js
- * @description Este arquivo contém as funções relacionadas à autenticação dos usuários no sistema
- * 
- * @version 1.0.0
- * @license MIT
- */
+//Este arquivo contém as funções relacionadas à autenticação dos usuários no sistema
 
 //Bibliotecas
 const bcrypt = require("bcryptjs"); //Cifra
 const jwt = require("jsonwebtoken"); //Funções de assinatura e validação do JWT
-const User = require("../models/User"); //Modelo de usuário para interação com o banco de dados
+
+const {User} = require("../models/Schemas");
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 let refreshTokens = [];
 
-//Registro de usuário
+//Cadastro
 exports.register = async (req, res) => {
     try {
         const { username, password } = req.body;

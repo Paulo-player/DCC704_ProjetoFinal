@@ -1,9 +1,7 @@
-//Utilitário para adicionar avaliações no database
+//Utilitário para database com avaliações
 
 const mongoose = require("mongoose");
-const User = require("../models/User");
-const Movie = require("../models/Movie");
-const Rating = require("../models/Rating");
+const {User,Movie,Rating} = require("../models/Schemas");
 const connectDB = require("./database");
 
 // Função para gerar uma nota realista (distribuição normal centrada em 3)

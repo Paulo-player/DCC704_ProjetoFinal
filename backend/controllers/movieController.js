@@ -1,18 +1,12 @@
-/**
- * @file movieController.js
- * @description Este arquivo contém as funções relacionadas à obtenção de filmes
- * 
- * @version 1.0.0
- * @license MIT
- */
+//Função de busca de filmes populares
 
-const Movie = require("../models/Movie"); // Modelo de filmes
+const {Movie} = require("../models/Schemas"); // Modelo de filmes
 const axios = require("axios"); // Para fazer requisições à API TMDB
 
-// Função para buscar filmes populares
+// Obtém filmes populares
 exports.getPopularMovies = async (req, res) => {
   try {
-    // Busca os 10 filmes com maior popularidade no banco de dados
+    // 
     const popularMovies = await Movie.find()
       .sort({ popularity: -1 }) // Ordena pela popularidade
       .limit(10); // Limita a 10 filmes
