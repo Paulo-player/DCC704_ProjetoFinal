@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AuthContext from "../context/AuthContext";
 import "../styles/global.css";
 import {
   Card,
@@ -15,12 +16,13 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const { isAuthenticated, login } = useContext(AuthContext); // Pegando do contexto
 
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      navigate("/user/home");
+    if (isAuthenticated) {
+      navigate("/user/home"); // Redireciona se já estiver autenticado
     }
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -29,12 +31,16 @@ function Register() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", {
+      const response = await axios.post("http://localhost:5000/api/auth/register", {
         username,
         password,
       });
+
       alert("Registro bem-sucedido!");
-      navigate("/login");
+
+      // Após registro, faz login automático
+      login(response.data.accessToken);
+      navigate("/user/home"); // Redireciona para a home do usuário
     } catch (error) {
       alert("Erro ao registrar");
     }
