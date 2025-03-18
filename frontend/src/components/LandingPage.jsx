@@ -5,12 +5,12 @@ import "../styles/global.css";
 const LandingPage = () => {
   return (
     <div className="auth-container">
-      <Card className="auth-card">
+      <Card className="auth-box"> {/* Usa a mesma estilização de Login/Register */}
         <CardContent>
-          <Typography variant="h4" align="center" gutterBottom>
+          <Typography variant="h4" align="center" className="auth-title">
             Bem-vindo ao Sistema de Recomendação de Filmes
           </Typography>
-          <Typography variant="body1" align="center" paragraph>
+          <Typography variant="body1" align="center">
             Descubra filmes incríveis com base nos seus gostos!
           </Typography>
           <div className="button-container">
@@ -20,7 +20,7 @@ const LandingPage = () => {
               fullWidth
               component={Link}
               to="/login"
-              className="landing-button"
+              className="auth-button"
             >
               Entrar
             </Button>
@@ -30,7 +30,7 @@ const LandingPage = () => {
               fullWidth
               component={Link}
               to="/register"
-              className="landing-button"
+              className="auth-button"
             >
               Cadastrar
             </Button>

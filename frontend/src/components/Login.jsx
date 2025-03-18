@@ -1,20 +1,22 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/global.css";
 import { Card, CardContent, Typography, TextField, Button } from "@mui/material";
+import AuthContext from "../context/AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { username, password });
-      localStorage.setItem("accessToken", response.data.accessToken);
+      login(response.data.accessToken); // Usa a função de login do contexto
       alert("Login bem-sucedido!");
-      navigate("/user/home"); // Redireciona para a rota protegida
+      navigate("/user/home"); // Redireciona após o estado ser atualizado
     } catch (error) {
       alert("Erro ao fazer login");
     }
@@ -60,4 +62,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
