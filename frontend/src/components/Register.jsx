@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/global.css";
-import { Card, CardContent, Typography, TextField, Button } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -11,11 +17,10 @@ function Register() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
+    if (localStorage.getItem("accessToken")) {
       navigate("/user/home");
     }
-  }, [navigate]);
+  }, []);
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -24,7 +29,10 @@ function Register() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", { username, password });
+      await axios.post("http://localhost:5000/api/auth/register", {
+        username,
+        password,
+      });
       alert("Registro bem-sucedido!");
       navigate("/login");
     } catch (error) {
@@ -36,7 +44,9 @@ function Register() {
     <div className="auth-container">
       <Card className="auth-card">
         <CardContent>
-          <Typography variant="h5" align="center">Registro</Typography>
+          <Typography variant="h5" align="center">
+            Registro
+          </Typography>
           <TextField
             fullWidth
             margin="normal"
@@ -62,8 +72,20 @@ function Register() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            error={password !== confirmPassword && confirmPassword !== ""}
+            helperText={
+              password !== confirmPassword && confirmPassword !== ""
+                ? "As senhas não coincidem"
+                : ""
+            }
           />
-          <Button fullWidth variant="contained" color="primary" onClick={handleRegister}>
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleRegister}
+          >
             Registrar
           </Button>
           <Button

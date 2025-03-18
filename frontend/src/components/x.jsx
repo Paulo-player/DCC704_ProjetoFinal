@@ -20,7 +20,7 @@ const RecommendationSection = () => {
 
     fetchRecommendations();
   }, [user]);
-
+  
   return (
     <div className="recommendations-container">
       {Object.entries(recommendations).map(([title, movies]) => (

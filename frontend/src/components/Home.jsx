@@ -7,7 +7,7 @@ import "../styles/global.css";
 function Navbar({ onLogout }) {
   return (
     <nav className="navbar">
-      <Link to="/home" className="navLink">
+      <Link to="/user/home" className="navLink">
         Home
       </Link>
       <Button
@@ -46,9 +46,9 @@ function Home() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.clear();  // Limpa todos os dados do usuário
     navigate("/login");
-  };
+  };  
 
   const sliderData = [
     {
