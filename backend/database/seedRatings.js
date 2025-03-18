@@ -18,7 +18,7 @@ const getRealisticRating = () => {
   return rating;
 };
 
-// Função para gerar um timestamp aleatório nos últimos 2 anos
+// Gerar um timestamp aleatório nos últimos 2 anos
 const getRandomTimestamp = () => {
   const now = Date.now();
   const twoYearsAgo = now - 2 * 365 * 24 * 60 * 60 * 1000; // Dois anos em milissegundos

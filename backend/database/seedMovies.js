@@ -12,7 +12,7 @@ connectDB();
 const API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const GENRE_LIST_URL = 'https://api.themoviedb.org/3/genre/movie/list';
-const MAX_PAGES = 500;
+const MAX_PAGES = 250;
 const DELAY_BETWEEN_REQUESTS = 20;
 
 let genreTranslations = {};
@@ -61,6 +61,7 @@ const fetchAdditionalMovieData = async (tmdbId) => {
   }
 };
 
+//Adiciona informações extras no filme (Atores, palavras-chave e Serviços que proveem)
 const processMovie = async (baseMovie) => {
     try {
       const additionalData = await fetchAdditionalMovieData(baseMovie.id);

@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "populate": "node database/seedMovies.js && node database/seedUsers && node database/seedRatings.js",
+    "populate": "node database/seedMovies.js && node database/seedUsers.js && node database/seedRatings.js",
     "dev": "nodemon server.js"
   },
   "keywords": [],

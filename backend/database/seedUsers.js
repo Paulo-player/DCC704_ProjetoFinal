@@ -11,7 +11,7 @@ async function populateUsers() {
     console.log("Conectado ao MongoDB");
 
     const users = [];
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 50; i++) {
       const username = `Dummy${i}`;
       const password = `Dummy${i}`;
       const hashedPassword = await bcrypt.hash(password, 10);
