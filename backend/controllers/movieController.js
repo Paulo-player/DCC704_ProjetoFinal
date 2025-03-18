@@ -1,27 +1,29 @@
-//Função de busca de filmes populares
-
-const {Movie} = require("../models/Schemas"); // Modelo de filmes
-const axios = require("axios"); // Para fazer requisições à API TMDB
+// Função de busca de filmes populares
+const { Movie } = require("../models/Schemas"); // Modelo de filmes
 
 // Obtém filmes populares
 exports.getPopularMovies = async (req, res) => {
   try {
-    // 
-    const popularMovies = await Movie.find()
-      .sort({ popularity: -1 }) // Ordena pela popularidade
-      .limit(10); // Limita a 10 filmes
+    const popularMovies = await Movie.find({ popularity: { $gt: 0 } }) // Garante que só retorna filmes com popularidade definida
+      .sort({ popularity: -1 })
+      .limit(10);
 
-    // Mapeia para associar as imagens
+    if (!popularMovies.length) {
+      return res.status(404).json({ message: "Nenhum filme popular encontrado." });
+    }
+
+    // Mapeia para associar as imagens, garantindo que os campos existem
     const prefixUrl = "https://image.tmdb.org/t/p/w500";
     const movieData = popularMovies.map((movie) => ({
+      tmdb_id: movie.tmdb_id,
       title: movie.title,
-      posterUrl: `${prefixUrl}${movie.poster_path}`,
-      backdropUrl: `${prefixUrl}${movie.backdrop_path}`,
+      posterUrl: movie.poster_path ? `${prefixUrl}${movie.poster_path}` : null,
+      backdropUrl: movie.backdrop_path ? `${prefixUrl}${movie.backdrop_path}` : null,
     }));
 
-    res.json(movieData); // Envia os dados para o frontend
+    res.json(movieData);
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erro ao buscar filmes populares.");
+    console.error("Erro ao buscar filmes populares:", error);
+    res.status(500).json({ message: "Erro ao buscar filmes populares." });
   }
 };

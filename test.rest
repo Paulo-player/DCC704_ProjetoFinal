@@ -1,0 +1,62 @@
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI3OTYzNSwiZXhwIjoxNzQyMjgwNTM1fQ.sdtKJId3NJCgAxgnFzIXMrlfGzA4CzMTaVq3pL0b8S8
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI3OTYzNX0.0AKo72uAKpoJkJGa_jwAmA7VkxeAHQDyq-VNNlSqjWM
+@username=test
+@password=test
+
+### Registro de usuário
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Login de usuário
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Atualizar token de acesso
+POST http://localhost:5000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "token": "{{refreshToken}}"
+}
+
+### Logout
+POST http://localhost:5000/api/auth/logout
+Content-Type: application/json
+
+{
+  "token": "{{refreshToken}}"
+}
+
+### Obter filmes populares
+GET http://localhost:5000/api/movies/popular
+
+### Obter recomendações personalizadas (requer autenticação)
+GET http://localhost:5000/api/recommendations
+Authorization: Bearer {{accessToken}}
+
+### Obter recomendações fallback
+GET http://localhost:5000/api/recommendations/fallback
+
+### Avaliar um filme (requer autenticação)
+POST http://localhost:5000/api/reviews/rate
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "movieId": "696506",
+  "rating": 4
+}
+
+### Página inicial do usuário logado
+GET http://localhost:5000/api/user/home
+Authorization: Bearer {{accessToken}}
