@@ -7,9 +7,7 @@ import "../styles/global.css";
 function Navbar({ onLogout }) {
   return (
     <nav className="navbar">
-      <Link to="/user/home" className="navLink">
-        Home
-      </Link>
+      <Link to="/user/home" className="navLink">Home</Link>
       <Button
         variant="contained"
         color="secondary"
@@ -23,72 +21,81 @@ function Navbar({ onLogout }) {
 }
 
 function Home() {
-  const [popularMovies, setPopularMovies] = useState([]);
+  const [recommendations, setRecommendations] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPopularMovies = async () => {
+    const fetchRecommendations = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/movies/popular"
-        );
-        if (Array.isArray(response.data)) {
-          setPopularMovies(response.data);
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+  
+        const response = await axios.get("http://localhost:5000/api/recommendations/all", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        console.log("Resposta da API:", response.data); // 🔍 Debug
+  
+        if (!response.data || Object.keys(response.data).length === 0) {
+          setError("Nenhuma recomendação disponível.");
         } else {
-          console.error("Resposta inesperada:", response.data);
+          // Se o backend retorna apenas recomendações gerais, armazenamos elas corretamente
+          const recommendationsData = response.data.recommendations || response.data;
+          setRecommendations(recommendationsData);
         }
       } catch (error) {
-        console.error("Erro ao obter filmes populares:", error);
+        console.error("Erro ao obter recomendações:", error);
+        setError("Erro ao carregar recomendações.");
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchPopularMovies();
-  }, []);
+  
+    fetchRecommendations();
+  }, [navigate]);
+  
 
   const handleLogout = () => {
-    localStorage.clear();  // Limpa todos os dados do usuário
+    localStorage.clear();
     navigate("/login");
-  };  
-
-  const sliderData = [
-    {
-      title: "Filmes Populares",
-      banners: popularMovies.length > 0 ? popularMovies : Array(10).fill(null),
-    },
-    {
-      title: "Usuários parecidos também gostaram de",
-      banners: Array(10).fill(null),
-    },
-    {
-      title: "Filmes parecidos com",
-      banners: Array(10).fill(null),
-    },
-  ];
+  };
 
   return (
     <div>
       <Navbar onLogout={handleLogout} />
       <h1>Bem-vindo à Home</h1>
-      {sliderData.map((slider, index) => (
-        <div key={index}>
-          <h3>{slider.title}</h3>
-          <div className="banners">
-            {slider.banners.map((banner, idx) => (
-              <div key={idx} className="banner">
-                {banner && banner.posterUrl ? (
-                  <img
-                    src={banner.posterUrl} // <-- Update this to banner.posterUrl
-                    alt={banner.title || "Filme"}
-                    className="bannerImage"
-                  />
-                ) : (
-                  <div className="placeholderBanner">Carregando...</div>
-                )}
-              </div>
-            ))}
+
+      {loading ? (
+        <p>Carregando recomendações...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        Object.entries(recommendations).map(([category, movies]) => (
+          <div key={category} className="recommendation-section">
+            <h3>{category}</h3>
+            <div className="banners">
+              {Array.isArray(movies) && movies.length > 0 ? (
+                movies.map((movie) => (
+                  <div key={movie._id} className="banner">
+                    <img
+                      src={movie.posterUrl}
+                      alt={movie.title}
+                      className="bannerImage"
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>Nenhum filme disponível nesta categoria.</p>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }

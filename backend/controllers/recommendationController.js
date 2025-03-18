@@ -93,16 +93,28 @@ const RecommendationController = {
       "Movies from the same director": lastRatedMovie
         ? await RecommendationController.getRecommendationsByDirector(userId, 5)
         : [],
-  
+    
       "Movies from the same genre": lastRatedMovie
         ? await RecommendationController.getRecommendationsByGenre(userId, 5)
         : [],
-  
+    
       "General content-based recommendations": await RecommendationController.getContentRecommendations(userId)
     };
   
+    // Se as recomendações personalizadas estiverem vazias, usa apenas "General content-based recommendations"
+    const hasPersonalizedRecommendations = 
+      recommendations["Based on your last highly rated movie"].length > 0 ||
+      recommendations["Movies from the same director"].length > 0 ||
+      recommendations["Movies from the same genre"].length > 0;
+  
+    if (!hasPersonalizedRecommendations) {
+      return recommendations["General content-based recommendations"];
+    }
+  
     return recommendations;
-  },  
+  },
+  
+    
   formatRecommendations: (rawRecommendations) => {
     const merged = rawRecommendations.reduce((acc, { source, movies }) => {
       acc[`Because you liked "${source}"`] = movies.map((m) => m.movie);
