@@ -1,5 +1,5 @@
-@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI3OTYzNSwiZXhwIjoxNzQyMjgwNTM1fQ.sdtKJId3NJCgAxgnFzIXMrlfGzA4CzMTaVq3pL0b8S8
-@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI3OTYzNX0.0AKo72uAKpoJkJGa_jwAmA7VkxeAHQDyq-VNNlSqjWM
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI4MjkyMywiZXhwIjoxNzQyMjgzODIzfQ.Vq0zKw4WIKzVmZATEYZmS1tZWd2qRWS8UrZSuHVnT30
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZDkwMWMwYWFkNGUzYThkNjBlNTcxOSIsInVzZXJuYW1lIjoidGVzdCIsImlhdCI6MTc0MjI4MjkyM30.JIyh6gcCEMzfA1VIMQrMLlqVeeMg06WYw-LV4F1h5lM
 @username=test
 @password=test
 
@@ -46,6 +46,22 @@ Authorization: Bearer {{accessToken}}
 
 ### Obter recomendações fallback
 GET http://localhost:5000/api/recommendations/fallback
+
+### Obter recomendações do último filme bem avaliado
+GET http://localhost:5000/api/recommendations/last-rated
+Authorization: Bearer {{accessToken}}
+
+### Buscar recomendações baseadas no diretor
+GET http://localhost:5000/api/recommendations/by-director
+Authorization: Bearer {{accessToken}}
+
+### Buscar recomendações baseadas no gênero
+GET http://localhost:5000/api/recommendations/by-genre
+Authorization: Bearer {{accessToken}}
+
+### Obter todas as recomendações organizadas
+GET http://localhost:5000/api/recommendations/all
+Authorization: Bearer {{accessToken}}
 
 ### Avaliar um filme (requer autenticação)
 POST http://localhost:5000/api/reviews/rate
