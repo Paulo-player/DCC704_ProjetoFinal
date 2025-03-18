@@ -1,0 +1,616 @@
+I would like you to analyze the actual structure of the code. So i will send the current code for the backend. Based on that backend implementation, create the front end structure.
+
+The backend has the directories: controllers,database,middlewares,models,routes,services,util and the server.js file.
+
+Here's the server.js code:
+
+```javascript
+//Arquivo principal do backend
+const tfidfService = require('./services/tfidfService');
+
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./database/database");
+
+// Importação dos arquivos roteadores
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+
+const movieRoutes = require("./routes/movieRoutes");
+const recommendationRoutes = require("./routes/recommendationRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+
+//Aplicativo Express
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Conexão com o banco de dados
+connectDB();
+
+//Inicializa o serviço de recomendação TD-IDF
+tfidfService.initialize().catch(err => {
+    console.error('TF-IDF initialization failed:', err);
+  });
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
+
+
+// Rotas
+app.use("/auth", authRoutes); // Rotas de autenticação
+app.use("/user", userRoutes); // Rotas do usuário
+
+app.use("/api/movies", movieRoutes); // Rotas de filmes
+app.use("/api/recommendations", recommendationRoutes); // Rotas de recomendações
+app.use("/api/reviews", reviewRoutes); // Rotas de avaliações
+
+// Iniciar o servidor
+app.listen(PORT, () => console.log(`Servidor on-line na porta ${PORT}`));
+``` 
+The controller directory have these files:
+
+authController.js
+```javascript
+//Este arquivo contém as funções relacionadas à autenticação dos usuários no sistema
+
+//Bibliotecas
+const bcrypt = require("bcryptjs"); //Cifra
+const jwt = require("jsonwebtoken"); //Funções de assinatura e validação do JWT
+
+const {User} = require("../models/Schemas");
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+let refreshTokens = [];
+
+//Cadastro
+exports.register = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        //Verifica se não há outro usuário com mesmo username já cadastrado.
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: "Já existe um usuário com esse nome." });
+        }
+
+        //Cifra a senha do usuário para armazenamento seguro
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new User({ username, password: hashedPassword });
+        await newUser.save();
+
+        res.status(201).json({ message: "Usuário registrado com sucesso" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Login
+exports.login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(401).json({ message: "Credenciais inválidas" });
+        }
+
+        // Incluindo o username no payload do token
+        const accessToken = jwt.sign(
+            { id: user._id, username: user.username },
+            accessTokenSecret,
+            { expiresIn: "15m" }
+        );
+        const refreshToken = jwt.sign(
+            { id: user._id, username: user.username },
+            refreshTokenSecret
+        );
+
+        refreshTokens.push(refreshToken);
+        res.json({ accessToken, refreshToken });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Atualização de token JWT
+exports.refreshToken = (req, res) => {
+    const { token } = req.body;
+    if (!token || !refreshTokens.includes(token)) return res.status(403).json({ message: 'Token inválido ou não encontrado.' });
+
+    jwt.verify(token, refreshTokenSecret, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Erro ao verificar o refresh token.' });
+        
+        // Se o refreshToken for válido, gere um novo accessToken
+        const newAccessToken = jwt.sign(
+            { id: user.id, username: user.username },
+            accessTokenSecret,
+            { expiresIn: "15m" }
+        );
+        res.json({ accessToken: newAccessToken });
+    });
+};
+
+//Logout
+exports.logout = (req, res) => {
+    try {
+        const { token } = req.body;
+
+        // Verifica se o token está na lista
+        if (!refreshTokens.includes(token)) {
+            return res.status(400).json({ message: 'Token não encontrado na lista.' });
+        }
+
+        // Remove o token da lista
+        refreshTokens = refreshTokens.filter((t) => t !== token);
+
+        // Responde com status 204 (sem conteúdo)
+        res.sendStatus(204);
+    } catch (error) {
+        console.error('Erro no logout:', error);  // Log de erro
+        res.status(500).json({ message: 'Erro no servidor ao tentar fazer logout.' });
+    }
+};
+``` 
+movieController.js
+```javascript
+//Função de busca de filmes populares
+
+const {Movie} = require("../models/Schemas"); // Modelo de filmes
+const axios = require("axios"); // Para fazer requisições à API TMDB
+
+// Obtém filmes populares
+exports.getPopularMovies = async (req, res) => {
+  try {
+    // 
+    const popularMovies = await Movie.find()
+      .sort({ popularity: -1 }) // Ordena pela popularidade
+      .limit(10); // Limita a 10 filmes
+
+    // Mapeia para associar as imagens
+    const prefixUrl = "https://image.tmdb.org/t/p/w500";
+    const movieData = popularMovies.map((movie) => ({
+      title: movie.title,
+      posterUrl: `${prefixUrl}${movie.poster_path}`,
+      backdropUrl: `${prefixUrl}${movie.backdrop_path}`,
+    }));
+
+    res.json(movieData); // Envia os dados para o frontend
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro ao buscar filmes populares.");
+  }
+};
+``` 
+recommendationController.js
+```javascript
+//Este arquivo contém as funções relacionadas ao sistema de recomendação do site
+
+const {Movie,Rating} = require('../models/Schemas');
+const tfidfService = require('../services/tfidfService');
+
+const RecommendationController = {
+  getContentRecommendations: async (userId) => {
+    const userRatings = await Rating.find({ user: userId })
+      .sort({ rating: -1 })
+      .limit(5)
+      .populate('movie');
+
+    if (userRatings.length === 0) {
+      return this.getFallbackRecommendations();
+    }
+
+    const recommendations = await Promise.all(
+      userRatings.map(async rating => ({
+        source: rating.movie.title,
+        movies: await tfidfService.getSimilarMovies(rating.movie._id, 5)
+      }))
+    );
+
+    return this.formatRecommendations(recommendations);
+  },
+
+  getFallbackRecommendations: async () => {
+    return {
+      'Popular Movies': await Movie.find().sort({ popularity: -1 }).limit(10),
+      'Top Rated': await Movie.find().sort({ vote_average: -1 }).limit(10),
+      'Latest Releases': await Movie.find().sort({ release_date: -1 }).limit(10)
+    };
+  },
+
+  formatRecommendations: (rawRecommendations) => {
+    const merged = rawRecommendations.reduce((acc, { source, movies }) => {
+      acc[`Because you liked "${source}"`] = movies.map(m => m.movie);
+      return acc;
+    }, {});
+
+    // Remove duplicates across categories
+    const seen = new Set();
+    Object.values(merged).forEach(movies => {
+      movies.forEach(movie => {
+        if (seen.has(movie._id.toString())) {
+          movie._duplicate = true;
+        }
+        seen.add(movie._id.toString());
+      });
+    });
+
+    return Object.entries(merged).reduce((acc, [key, value]) => {
+      acc[key] = value.filter(m => !m._duplicate).slice(0, 5);
+      return acc;
+    }, {});
+  }
+};
+
+module.exports = RecommendationController;
+``` 
+The database directory has this file called database.js
+
+```javascript
+//Conexão com o mongoDB
+
+const mongoose = require('mongoose');
+require('dotenv').config({path:"../.env"})
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB Conectado');
+    } catch (error) {
+        console.error('Erro de conexão com o MongoDB:', error);
+        process.exit(1); // Exit process on failure
+    }
+};
+
+module.exports = connectDB;
+``` 
+The middlewares folder  has this file called authMiddleware.js
+```javascript
+//Middleware verifyToken, que controla o acesso a rotas protegidas
+
+const jwt = require('jsonwebtoken');
+
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'Token não fornecido. Redirecionar para login.' });
+    }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Token inválido. Redirecionar para login.' });
+        }
+
+        req.user = user;
+        next();
+    });
+};
+
+module.exports = verifyToken;
+``` 
+The models folder has the Schemas.js file
+
+```javascript
+//Arquivo com os Schemas e modelos mongoDB
+
+const {Schema,model} = require('mongoose')
+
+//Schemas mongoDB
+const movieSchema = new Schema({
+  tmdb_id: { type: Number, unique: true },
+  title: String,
+  overview: String,
+  release_date: Date,
+  genres: [String],
+  popularity: Number,
+  vote_average: Number,
+  vote_count: Number,
+  poster_path: String,
+  backdrop_path: String,
+  cast: [String],
+  directors: [String],
+  keywords: [String],
+  streaming_providers: [{
+    provider_id: String,
+    logo_path: String,
+    provider_name: String
+  }]
+}, { timestamps: true });
+
+const ratingSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  movie: { type: Schema.Types.ObjectId, ref: 'Movie', required: true },
+  rating: { type: Number, min: 1, max: 5, required: true },
+  timestamp: { type: Date, default: Date.now }
+});
+
+const userSchema = new Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+});
+
+//Modelos
+const Movie = model('Movie', movieSchema);
+const User = model('User', userSchema);
+const Rating = model('Rating', ratingSchema);
+
+module.exports = { Movie,User,Rating };
+``` 
+
+The routes directory has the following files:
+
+authRoutes.js:
+```javascript
+//Rotas de autenticação e autorização
+const express = require("express");
+const { register, login, refreshToken, logout } = require("../controllers/authController");
+
+const router = express.Router();
+
+router.post("/register", register);
+router.post("/login", login);
+router.post("/token", refreshToken);
+router.post("/logout", logout);
+
+module.exports = router;
+```
+
+movieRoutes.js:
+```javascript
+//Rotas de filmes
+
+const express = require("express");
+const movieController = require("../controllers/movieController");
+const router = express.Router();
+
+// Rota para obter filmes populares
+router.get("/popular", movieController.getPopularMovies);
+
+module.exports = router;
+```
+
+recommendationRoutes.js:
+```javascript
+//Rotas de recomendação
+
+
+const express = require('express');
+const router = express.Router();
+const verifyToken = require('../middlewares/authMiddleware');
+const RecommendationController = require('../controllers/recommendationController');
+
+// @route   GET /api/recommendations
+// @desc    Get personalized recommendations
+// @access  Private
+router.get('/', verifyToken, async (req, res) => {
+  try {
+    const recommendations = await RecommendationController
+      .getContentRecommendations(req.user.id);
+      
+    res.json(recommendations);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// @route   GET /api/recommendations/fallback
+// @desc    Get non-personalized recommendations
+// @access  Public
+router.get('/fallback', async (req, res) => {
+  try {
+    const recommendations = await RecommendationController
+      .getFallbackRecommendations();
+      
+    res.json(recommendations);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+module.exports = router;
+```
+
+reviewRoutes.js:
+
+```javascript
+//Rotas de avaliação
+
+const express = require("express");
+const {Rating,Movie} = require("../models/Schemas");
+
+const authMiddleware = require("../middlewares/authMiddleware");
+
+const router = express.Router();
+
+// Rota para atribuir avaliação de filme
+router.post("/rate", authMiddleware, async (req, res) => {
+  try {
+    const { movieId, rating } = req.body;
+    const userId = req.user.id;
+
+    console.log("Recebido movieId:", movieId);
+    console.log("Recebido rating:", rating);
+    console.log("ID do usuário:", userId);
+
+    // Verificar se o filme existe
+    const movie = await Movie.findOne({ id: movieId });
+    if (!movie) {
+      console.log("Filme não encontrado");
+      return res.status(404).json({ message: "Filme não encontrado." });
+    }
+
+    // Verificar se a avaliação está no intervalo permitido (0 a 5)
+    if (rating < 0 || rating > 5) {
+      console.log("Avaliação inválida");
+      return res.status(400).json({ message: "Avaliação deve ser um valor entre 0 e 5." });
+    }
+
+    // Verificar se o usuário já avaliou este filme
+    let userRating = await Rating.findOne({ user: userId, movie: movie._id });
+    if (userRating) {
+      // Se já avaliou, atualize a avaliação
+      console.log("Atualizando avaliação existente");
+      userRating.rating = rating;
+      await userRating.save();
+    } else {
+      // Se não avaliou, crie uma nova avaliação
+      console.log("Criando nova avaliação");
+      userRating = new Rating({
+        user: userId,
+        movie: movie._id,
+        rating,
+      });
+      await userRating.save();
+    }
+
+    res.status(200).json({ message: "Avaliação salva com sucesso.", rating: userRating });
+  } catch (error) {
+    console.error("Erro ao salvar avaliação:", error);
+    res.status(500).json({ message: "Erro ao salvar avaliação.", error: error.message });
+  }
+});
+
+module.exports = router;
+```
+
+userRoutes.js:
+
+```javascript
+//Rotas protegidas
+const express = require('express');
+const verifyToken = require('../middlewares/authMiddleware');  // Usando o middleware importado
+
+const router = express.Router();
+
+//Página inicial do usuário logado
+router.get('/home', verifyToken, (req, res) => {
+    res.json({ message: `Bem-vindo à página home, ${req.user.username}!` });
+});
+
+module.exports = router;
+```
+
+The services directory has the tdidfService.js file, with the following code:
+
+```javascript
+const natural = require('natural');
+const mongoose = require('mongoose');
+const {Movie} = require('../models/Schemas');
+const { sleep } = require('../util/helpers');
+
+class TFIDFService {
+  constructor() {
+    this.tfidf = new natural.TfIdf();
+    this.movieVectors = new Map();
+    this.isInitialized = false;
+  }
+
+  async initialize() {
+    if (this.isInitialized) return;
+    
+    console.log('Initializing TF-IDF engine...');
+    const movies = await Movie.find().lean();
+    
+    // Create weighted document vectors
+    movies.forEach(movie => {
+      const vector = [
+        ...movie.genres.map(g => `${g}_genre`),          // Genre terms
+        ...movie.directors.map(d => `${d}_director`),    // Director terms
+        ...movie.cast.slice(0, 3).map(a => `${a}_cast`), // Top 3 cast members
+        ...movie.keywords.map(k => `${k}_keyword`)       // Keywords
+      ].join(' ');
+
+      this.tfidf.addDocument(vector);
+      this.movieVectors.set(movie._id.toString(), {
+        index: this.tfidf.documents.length - 1,
+        movie
+      });
+    });
+
+    this.isInitialized = true;
+    console.log(`TF-IDF initialized with ${movies.length} documents`);
+  }
+
+  async getSimilarMovies(movieId, limit = 10) {
+    await this.initialize();
+    
+    const target = this.movieVectors.get(movieId.toString());
+    if (!target) throw new Error('Movie not found in TF-IDF index');
+
+    const similarities = [];
+    
+    // Calculate cosine similarities
+    this.tfidf.tfidfs(target.index, (i, score) => {
+      if (i !== target.index) {
+        const movieEntry = Array.from(this.movieVectors.values())
+          .find(entry => entry.index === i);
+        
+        if (movieEntry) {
+          similarities.push({
+            movie: movieEntry.movie,
+            score: score + this.calculateBonusPoints(target.movie, movieEntry.movie)
+          });
+        }
+      }
+    });
+
+    return similarities
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
+  }
+
+  calculateBonusPoints(targetMovie, compareMovie) {
+    let bonus = 0;
+    
+    // Shared directors bonus
+    const sharedDirectors = targetMovie.directors.filter(d => 
+      compareMovie.directors.includes(d)
+    ).length;
+    bonus += sharedDirectors * 0.2;
+
+    // Shared cast bonus
+    const sharedCast = targetMovie.cast.filter(a => 
+      compareMovie.cast.includes(a)
+    ).length;
+    bonus += sharedCast * 0.1;
+
+    // Same year bonus
+    if (targetMovie.release_date?.getFullYear() === 
+        compareMovie.release_date?.getFullYear()) {
+      bonus += 0.15;
+    }
+
+    return bonus;
+  }
+}
+
+module.exports = new TFIDFService();
+```
+
+Finally, the util directory has the helpers.js file, with the following code:
+
+```javascript
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const weightedRandom = (weights) => {
+    const total = weights.reduce((a, b) => a + b);
+    const threshold = Math.random() * total;
+    
+    let sum = 0;
+    return weights.findIndex((weight) => {
+      sum += weight;
+      return sum >= threshold;
+    });
+  };
+module.exports = { sleep,weightedRandom };
+```
+
+Taking all of this into consideration, build the frontend structure

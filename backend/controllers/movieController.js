@@ -1,21 +1,22 @@
-// controllers/movieController.js
+//Função de busca de filmes populares
 
-const Movie = require("../models/Movies"); // Modelo de filmes
+const {Movie} = require("../models/Schemas"); // Modelo de filmes
 const axios = require("axios"); // Para fazer requisições à API TMDB
 
-// Função para buscar filmes populares
+// Obtém filmes populares
 exports.getPopularMovies = async (req, res) => {
   try {
-    // Busca os 10 filmes com maior popularidade
+    // 
     const popularMovies = await Movie.find()
       .sort({ popularity: -1 }) // Ordena pela popularidade
       .limit(10); // Limita a 10 filmes
 
     // Mapeia para associar as imagens
+    const prefixUrl = "https://image.tmdb.org/t/p/w500";
     const movieData = popularMovies.map((movie) => ({
       title: movie.title,
-      posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-      backdropUrl: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
+      posterUrl: `${prefixUrl}${movie.poster_path}`,
+      backdropUrl: `${prefixUrl}${movie.backdrop_path}`,
     }));
 
     res.json(movieData); // Envia os dados para o frontend

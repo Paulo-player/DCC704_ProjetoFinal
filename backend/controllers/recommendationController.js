@@ -1,55 +1,59 @@
-// controllers/recommendationController.js
-const User = require("../models/User");
-const Rating = require("../models/Rating");
-const Movie = require("../models/Movies");
-const mongoose = require("mongoose");
+//Este arquivo contém as funções relacionadas ao sistema de recomendação do site
 
-const getSimilarUsers = async (userId) => {
-  const userRatings = await Rating.find({ user: userId });
-  const userMovies = userRatings.map(rating => rating.movie.toString());
+const {Movie,Rating} = require('../models/Schemas');
+const tfidfService = require('../services/tfidfService');
 
-  const allRatings = await Rating.find({ movie: { $in: userMovies } });
-  const similarityScores = {};
+const RecommendationController = {
+  getContentRecommendations: async (userId) => {
+    const userRatings = await Rating.find({ user: userId })
+      .sort({ rating: -1 })
+      .limit(5)
+      .populate('movie');
 
-  allRatings.forEach(({ user, movie, rating }) => {
-    if (user.toString() !== userId.toString()) {
-      if (!similarityScores[user]) similarityScores[user] = { total: 0, count: 0 };
-      similarityScores[user].total += rating;
-      similarityScores[user].count += 1;
+    if (userRatings.length === 0) {
+      return this.getFallbackRecommendations();
     }
-  });
 
-  return Object.entries(similarityScores)
-    .map(([user, data]) => ({ user, score: data.total / data.count }))
-    .sort((a, b) => b.score - a.score)
-    .map(entry => entry.user);
-};
+    const recommendations = await Promise.all(
+      userRatings.map(async rating => ({
+        source: rating.movie.title,
+        movies: await tfidfService.getSimilarMovies(rating.movie._id, 5)
+      }))
+    );
 
-const getRecommendedMovies = async (userId) => {
-  const similarUsers = await getSimilarUsers(userId);
-  const userRatings = await Rating.find({ user: userId });
-  const userMovies = new Set(userRatings.map(rating => rating.movie.toString()));
+    return this.formatRecommendations(recommendations);
+  },
 
-  const recommendedMovies = new Map();
+  getFallbackRecommendations: async () => {
+    return {
+      'Popular Movies': await Movie.find().sort({ popularity: -1 }).limit(10),
+      'Top Rated': await Movie.find().sort({ vote_average: -1 }).limit(10),
+      'Latest Releases': await Movie.find().sort({ release_date: -1 }).limit(10)
+    };
+  },
 
-  for (const similarUser of similarUsers) {
-    const similarUserRatings = await Rating.find({ user: similarUser }).populate("movie");
-    
-    similarUserRatings.forEach(({ movie, rating }) => {
-      if (!userMovies.has(movie._id.toString())) {
-        if (!recommendedMovies.has(movie._id)) {
-          recommendedMovies.set(movie._id, { movie, total: 0, count: 0 });
+  formatRecommendations: (rawRecommendations) => {
+    const merged = rawRecommendations.reduce((acc, { source, movies }) => {
+      acc[`Because you liked "${source}"`] = movies.map(m => m.movie);
+      return acc;
+    }, {});
+
+    // Remove duplicates across categories
+    const seen = new Set();
+    Object.values(merged).forEach(movies => {
+      movies.forEach(movie => {
+        if (seen.has(movie._id.toString())) {
+          movie._duplicate = true;
         }
-        const entry = recommendedMovies.get(movie._id);
-        entry.total += rating;
-        entry.count += 1;
-      }
+        seen.add(movie._id.toString());
+      });
     });
-  }
 
-  return Array.from(recommendedMovies.values())
-    .map(({ movie, total, count }) => ({ movie, averageRating: total / count }))
-    .sort((a, b) => b.averageRating - a.averageRating);
+    return Object.entries(merged).reduce((acc, [key, value]) => {
+      acc[key] = value.filter(m => !m._duplicate).slice(0, 5);
+      return acc;
+    }, {});
+  }
 };
 
-module.exports = { getSimilarUsers, getRecommendedMovies };
+module.exports = RecommendationController;

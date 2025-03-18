@@ -1,3 +1,5 @@
+//Middleware verifyToken, que controla o acesso a rotas protegidas
+
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {

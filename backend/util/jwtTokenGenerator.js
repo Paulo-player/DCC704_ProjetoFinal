@@ -1,3 +1,4 @@
+//Geradpr de secrets JWT
 const crypto = require('crypto');
 
 function generateJWTKey() {

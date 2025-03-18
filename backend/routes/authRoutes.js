@@ -1,3 +1,4 @@
+//Rotas de autenticação e autorização
 const express = require("express");
 const { register, login, refreshToken, logout } = require("../controllers/authController");
 

@@ -1,27 +1,39 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+//Este arquivo contém as funções relacionadas à autenticação dos usuários no sistema
 
-const saltRounds = 10;
+//Bibliotecas
+const bcrypt = require("bcryptjs"); //Cifra
+const jwt = require("jsonwebtoken"); //Funções de assinatura e validação do JWT
+
+const {User} = require("../models/Schemas");
+
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 let refreshTokens = [];
 
+//Cadastro
 exports.register = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(password, salt);
+
+        //Verifica se não há outro usuário com mesmo username já cadastrado.
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: "Já existe um usuário com esse nome." });
+        }
+
+        //Cifra a senha do usuário para armazenamento seguro
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({ username, password: hashedPassword });
         await newUser.save();
 
-        res.status(201).json({ message: "Usuário registrado" });
+        res.status(201).json({ message: "Usuário registrado com sucesso" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
+//Login
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -49,6 +61,7 @@ exports.login = async (req, res) => {
     }
 };
 
+//Atualização de token JWT
 exports.refreshToken = (req, res) => {
     const { token } = req.body;
     if (!token || !refreshTokens.includes(token)) return res.status(403).json({ message: 'Token inválido ou não encontrado.' });
@@ -66,7 +79,7 @@ exports.refreshToken = (req, res) => {
     });
 };
 
-
+//Logout
 exports.logout = (req, res) => {
     try {
         const { token } = req.body;

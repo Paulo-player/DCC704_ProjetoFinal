@@ -1,21 +1,35 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Home from "./components/Home";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './components/auth/PrivateRoute';
+import Header from './components/ui/Header';
+import LoginPage from './pages/public/LoginPage';
+import RegisterPage from './pages/public/RegisterPage';
+import HomePage from './pages/private/HomePage';
+import RecommendationsPage from './pages/private/RecommendationsPage';
+import MovieDetailPage from './pages/private/MovieDetailPage';
+import ProfilePage from './pages/private/ProfilePage';
 
 function App() {
-  const isAuthenticated = localStorage.getItem("accessToken");  // Verifique se o usuário está autenticado
-
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/user/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/home" : "/login"} />} />
-      </Routes>
+      <AuthProvider>
+        <Header />
+        <main className="container mx-auto px-4 py-6">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="/movie/:id" element={<MovieDetailPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Route>
+          </Routes>
+        </main>
+      </AuthProvider>
     </Router>
   );
 }
 
-export default App;
+export default App
