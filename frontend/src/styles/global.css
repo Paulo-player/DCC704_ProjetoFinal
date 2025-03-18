@@ -32,6 +32,13 @@ body {
 
   /* auth.css - Melhorias no design */
 
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
 .auth-container {
   display: flex;
   flex-direction: column;
@@ -195,4 +202,11 @@ body {
   font-size: 1rem;
   font-weight: bold;
   margin-top: 0.5rem;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
 }
