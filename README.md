@@ -2,11 +2,6 @@
 
 Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcial de notas na disciplina Arquitetura e Tecnologias de Sistemas Web.
 
-## Conteúdo
-- [Instalação](#instalação)
-- [Uso](#uso)
-- [Documentação da API](#documentação-da-API)
-
 ## Instalação
 
 1 - Clone o repositório
@@ -17,7 +12,7 @@ Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcia
    ```bash
       cd DCC704_ProjetoFinal
    ```
-3 - Renomeie o arquivo .env.example na pasta raiz e preencha as variáveis de ambiente conforme os comentários
+3 - Renomeie o arquivo .env.example na pasta raiz e preencha as variáveis de ambiente conforme indicado no arquivo
    ```bash
       rename .env.example .env
       notepad .env
@@ -31,7 +26,7 @@ Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcia
       cd backend
       npm install
    ```
-6 - No primeiro terminal, navegue até a pasta do frontend e instale as dependências
+6 - No segundo terminal, navegue até a pasta do frontend e instale as dependências
    ```bash
       cd frontend
       npm install
@@ -44,10 +39,3 @@ Este projeto foi desenvolvido como parte dos requisitos para a obtenção parcia
 ```bash
       npm run dev
    ```
-
-## Uso
-
-## documentação-da-API
-
-### Endpoints
-- **/auth/**
